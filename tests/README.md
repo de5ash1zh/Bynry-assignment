@@ -1,22 +1,22 @@
 # Tests
 
-## 📋 Overview
+## Overview
 
 This directory contains comprehensive test suites for the StockFlow B2B inventory management platform. The tests cover all three parts of the assignment with a focus on production-ready quality assurance.
 
-## 🧪 Test Files
+## Test Files
 
 ### `low_stock_alerts.test.js`
 Comprehensive test suite for the low-stock alerts API implementation.
 
 **Test Coverage:**
-- ✅ Happy path scenarios
-- ✅ Edge cases and error conditions
-- ✅ Business rule validation
-- ✅ Performance testing
-- ✅ Security testing
+- Happy path scenarios
+- Edge cases and error conditions
+- Business rule validation
+- Performance testing
+- Security testing
 
-## 🎯 Testing Strategy
+## Testing Strategy
 
 ### Test Categories
 
@@ -38,7 +38,7 @@ Comprehensive test suite for the low-stock alerts API implementation.
 - **Error Scenarios**: Database failures, timeouts
 - **Security Cases**: Unauthorized access attempts
 
-## 📊 Test Scenarios
+## Test Scenarios
 
 ### Low Stock Alerts API Tests
 
@@ -102,7 +102,7 @@ it('should handle query timeout errors', async () => {
 });
 ```
 
-## 🛠️ Test Setup
+## Test Setup
 
 ### Prerequisites
 ```bash
@@ -137,7 +137,7 @@ beforeEach(async () => {
 });
 ```
 
-## 🚀 Running Tests
+## Running Tests
 
 ### All Tests
 ```bash
@@ -159,7 +159,7 @@ npm test -- --coverage
 npm test -- --watch
 ```
 
-## 📈 Test Metrics
+## Test Metrics
 
 ### Coverage Goals
 - **Line Coverage**: > 90%
@@ -171,7 +171,7 @@ npm test -- --watch
 - **Memory Usage**: < 100MB for test suite
 - **Database Queries**: Optimized query count
 
-## 🔍 Test Data Management
+## Test Data Management
 
 ### Test Data Creation
 ```javascript
@@ -202,7 +202,7 @@ afterEach(async () => {
 });
 ```
 
-## 🛡️ Security Testing
+## Security Testing
 
 ### Authentication Tests
 - Valid token validation
@@ -222,7 +222,7 @@ afterEach(async () => {
 - Parameter tampering
 - Malformed JSON handling
 
-## 📊 Performance Testing
+## Performance Testing
 
 ### Load Testing
 - Concurrent request handling
@@ -236,7 +236,7 @@ afterEach(async () => {
 - Database timeout scenarios
 - Resource exhaustion
 
-## 🔧 Test Utilities
+## Test Utilities
 
 ### Mock Helpers
 ```javascript
@@ -260,7 +260,7 @@ expect(response.body.alerts).toBeInstanceOf(Array);
 expect(response.body.total_alerts).toBeGreaterThanOrEqual(0);
 ```
 
-## 📝 Test Documentation
+## Test Documentation
 
 ### Test Naming Convention
 - **Feature**: `should [expected behavior]`
@@ -280,7 +280,7 @@ describe('Feature Name', () => {
 });
 ```
 
-## 🎯 Quality Assurance
+## Quality Assurance
 
 ### Code Quality
 - **Linting**: ESLint configuration for test files
@@ -293,7 +293,7 @@ describe('Feature Name', () => {
 - **Performance**: Fast test execution
 - **Coverage**: Comprehensive scenario coverage
 
-## 📊 Continuous Integration
+## Continuous Integration
 
 ### CI/CD Integration
 - **Automated Testing**: Run tests on every commit
@@ -307,7 +307,7 @@ describe('Feature Name', () => {
 - **Speed**: Optimized for fast feedback
 - **Reliability**: Stable test infrastructure
 
-## 📝 Notes
+## Notes
 
 - Tests use Jest as the testing framework
 - Supertest for HTTP endpoint testing

@@ -14,22 +14,11 @@ const { userHasCompanyAccess } = require("../utils/authHelpers");
 
 const router = express.Router();
 
-/**
- * GET /api/companies/{company_id}/alerts/low-stock
- * 
- * Business Rules:
- * 1. Low stock threshold varies by product type (category)
- * 2. Only alert for products with recent sales activity (last 30 days)
- * 3. Must handle multiple warehouses per company
- * 4. Include supplier information for reordering
- * 5. Calculate days until stockout based on recent sales velocity
- */
 router.get("/api/companies/:company_id/alerts/low-stock", async (req, res) => {
   const { company_id } = req.params;
   const { warehouse_id, days_threshold = 30 } = req.query;
 
   try {
-    // Input validation
     const companyId = parseInt(company_id);
     if (isNaN(companyId) || companyId <= 0) {
       return res.status(400).json({
@@ -38,7 +27,6 @@ router.get("/api/companies/:company_id/alerts/low-stock", async (req, res) => {
       });
     }
 
-    // Optional warehouse filter validation
     let warehouseFilter = {};
     if (warehouse_id) {
       const warehouseId = parseInt(warehouse_id);
@@ -51,7 +39,6 @@ router.get("/api/companies/:company_id/alerts/low-stock", async (req, res) => {
       warehouseFilter.id = warehouseId;
     }
 
-    // Authorization check - ensure user has access to this company
     if (!userHasCompanyAccess(req.currentUser.id, companyId)) {
       return res.status(403).json({
         error: "Unauthorized",
@@ -59,7 +46,6 @@ router.get("/api/companies/:company_id/alerts/low-stock", async (req, res) => {
       });
     }
 
-    // Verify company exists
     const company = await sequelize.models.Company.findByPk(companyId);
     if (!company) {
       return res.status(404).json({
@@ -68,11 +54,9 @@ router.get("/api/companies/:company_id/alerts/low-stock", async (req, res) => {
       });
     }
 
-    // Calculate date threshold for recent sales activity
     const recentSalesDate = new Date();
     recentSalesDate.setDate(recentSalesDate.getDate() - parseInt(days_threshold));
 
-    // Build the main query to get low stock alerts
     const alertsQuery = `
       WITH product_sales_velocity AS (
         SELECT 
@@ -83,7 +67,7 @@ router.get("/api/companies/:company_id/alerts/low-stock", async (req, res) => {
         FROM sales_transactions st
         WHERE st.sale_date >= :recentSalesDate
         GROUP BY st.product_id, st.warehouse_id
-        HAVING COUNT(*) >= 1  -- At least one sale in recent period
+        HAVING COUNT(*) >= 1
       ),
       product_thresholds AS (
         SELECT 
@@ -130,7 +114,6 @@ router.get("/api/companies/:company_id/alerts/low-stock", async (req, res) => {
       ORDER BY i.quantity ASC, pt.product_name ASC
     `;
 
-    // Execute the query with parameters
     const queryParams = {
       companyId,
       recentSalesDate,
@@ -142,7 +125,6 @@ router.get("/api/companies/:company_id/alerts/low-stock", async (req, res) => {
       type: sequelize.QueryTypes.SELECT
     });
 
-    // Transform the results to match expected response format
     const formattedAlerts = alerts.map(alert => ({
       product_id: alert.product_id,
       product_name: alert.product_name,
@@ -161,7 +143,6 @@ router.get("/api/companies/:company_id/alerts/low-stock", async (req, res) => {
       } : null
     }));
 
-    // Add additional metadata
     const response = {
       alerts: formattedAlerts,
       total_alerts: formattedAlerts.length,
@@ -179,7 +160,6 @@ router.get("/api/companies/:company_id/alerts/low-stock", async (req, res) => {
   } catch (error) {
     console.error("Error fetching low stock alerts:", error);
     
-    // Handle specific database errors
     if (error.name === 'SequelizeConnectionError') {
       return res.status(503).json({
         error: "Database connection error",
@@ -201,10 +181,6 @@ router.get("/api/companies/:company_id/alerts/low-stock", async (req, res) => {
   }
 });
 
-/**
- * GET /api/companies/{company_id}/alerts/low-stock/summary
- * Additional endpoint for dashboard summary
- */
 router.get("/api/companies/:company_id/alerts/low-stock/summary", async (req, res) => {
   const { company_id } = req.params;
 
@@ -216,14 +192,12 @@ router.get("/api/companies/:company_id/alerts/low-stock/summary", async (req, re
       });
     }
 
-    // Authorization check
     if (!userHasCompanyAccess(req.currentUser.id, companyId)) {
       return res.status(403).json({
         error: "Unauthorized"
       });
     }
 
-    // Get summary statistics
     const summaryQuery = `
       SELECT 
         COUNT(DISTINCT i.product_id) as total_low_stock_products,

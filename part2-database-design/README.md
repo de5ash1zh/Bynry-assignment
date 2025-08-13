@@ -1,10 +1,10 @@
 # Part 2: Database Design
 
-## 📋 Overview
+## Overview
 
 This directory contains the complete database schema design for the StockFlow B2B inventory management platform. The design supports multi-tenant architecture, complex inventory tracking, and scalable business operations.
 
-## 🗄️ Database Schema
+## Database Schema
 
 **File**: `db_design.js`
 
@@ -207,7 +207,7 @@ CREATE TABLE bundle_components (
 ```
 **Purpose**: Product bundle relationships
 
-## 🎯 Design Decisions
+## Design Decisions
 
 ### 1. Multi-Tenant Architecture
 - **Company Isolation**: All data scoped to company_id
@@ -234,7 +234,7 @@ CREATE TABLE bundle_components (
 - **Inventory Management**: Automatic component tracking
 - **Flexibility**: Dynamic bundle composition
 
-## ❓ Missing Requirements Identified
+## Missing Requirements Identified
 
 ### 1. User Management
 - **Authentication**: How are users logging in?
@@ -256,7 +256,7 @@ CREATE TABLE bundle_components (
 - **APIs**: Third-party supplier APIs?
 - **Notifications**: Alert delivery mechanisms?
 
-## 🔧 Technical Considerations
+## Technical Considerations
 
 ### Performance
 - **Indexing**: Optimized for common query patterns
@@ -278,7 +278,7 @@ CREATE TABLE bundle_components (
 - **Monitoring**: Performance metrics ready
 - **Migration**: Schema evolution support
 
-## 📊 Data Relationships
+## Data Relationships
 
 ```
 Companies (1) ←→ (N) Warehouses
@@ -297,7 +297,7 @@ Warehouses (1) ←→ (N) Sales_Transactions
 Suppliers (1) ←→ (N) Product_Suppliers
 ```
 
-## 🚀 Future Enhancements
+## Future Enhancements
 
 ### Potential Additions
 - **Customer Management**: Customer accounts and orders
@@ -312,7 +312,7 @@ Suppliers (1) ←→ (N) Product_Suppliers
 - **Queue**: Background job processing
 - **Monitoring**: Performance tracking
 
-## 📝 Notes
+## Notes
 
 - Schema designed for PostgreSQL
 - Supports complex business requirements

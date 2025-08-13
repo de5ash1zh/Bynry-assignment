@@ -6,7 +6,6 @@ const { userHasWarehouseAccess } = require("../utils/authHelpers");
 
 const router = express.Router();
 
-// Validation schema
 const productSchema = Joi.object({
   name: Joi.string().trim().min(1).required(),
   sku: Joi.string().trim().min(1).required(),
@@ -19,7 +18,6 @@ const productSchema = Joi.object({
 router.post("/api/products", async (req, res) => {
   const t = await sequelize.transaction();
   try {
-    // Validate request body
     const { error, value: data } = productSchema.validate(req.body, {
       abortEarly: false,
     });
@@ -30,12 +28,10 @@ router.post("/api/products", async (req, res) => {
       });
     }
 
-    // Auth check
     if (!userHasWarehouseAccess(req.currentUser.id, data.warehouse_id)) {
       return res.status(403).json({ error: "Unauthorized warehouse access" });
     }
 
-    // Check warehouse exists and belongs to company
     const warehouse = await Warehouse.findOne({
       where: {
         id: data.warehouse_id,
@@ -46,13 +42,11 @@ router.post("/api/products", async (req, res) => {
       return res.status(404).json({ error: "Warehouse not found" });
     }
 
-    // Check for duplicate SKU
     const existingProduct = await Product.findOne({ where: { sku: data.sku } });
     if (existingProduct) {
       return res.status(409).json({ error: `SKU ${data.sku} already exists` });
     }
 
-    // Create product
     const product = await Product.create(
       {
         name: data.name.trim(),
@@ -65,7 +59,6 @@ router.post("/api/products", async (req, res) => {
       { transaction: t }
     );
 
-    // Create inventory record
     await Inventory.create(
       {
         product_id: product.id,
@@ -76,7 +69,6 @@ router.post("/api/products", async (req, res) => {
       { transaction: t }
     );
 
-    // Commit transaction
     await t.commit();
 
     return res.status(201).json({
